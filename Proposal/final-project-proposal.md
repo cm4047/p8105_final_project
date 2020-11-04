@@ -8,7 +8,7 @@ Final Project Proposal
 
 ## **Project Title**
 
-A closer look at college enrollment rate in the United States
+Exploring the college enrollment rate in the United States
 
 ## **Motivation**
 

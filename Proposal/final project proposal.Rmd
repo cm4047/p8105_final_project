@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 * Chen Mo (cm4047)  
 
 ##  **Project Title**   
-A closer look at college enrollment rate in the United States 
+Exploring the college enrollment rate in the United States 
 
 ## **Motivation**  
 One of the major social issues in the United States is the inequality in the higher education. Finding the relevant factors which influence the college enrollment rate in the United States can help the state and federal governments and schools themselves to propose solutions to make college accessible to people in different circumstances. Many studies have shown that the geography is one of the major reasons for the higher education inequalities. To investigate deeper, we plan to explore the trend of the college enrollment rate from demographic and geographic aspects, as well as the relationship between those and school type (private school or not), and we want to investigate if there are significant differences in college enrollment rate between different states after adjusting other demographic factors such as income and race.  
