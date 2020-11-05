@@ -5,6 +5,7 @@ Final Project Proposal
 
   - Zhiye Lou (zl2978)  
   - Chen Mo (cm4047)
+  - Wenzhao Wu (ww2579)
 
 ## **Project Title**
 

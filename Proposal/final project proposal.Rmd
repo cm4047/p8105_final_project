@@ -7,7 +7,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 ## **Names and UNIs**
 * Zhiye Lou (zl2978)  
-* Chen Mo (cm4047)  
+* Chen Mo (cm4047) 
+* Wenzhao Wu (ww2579)
 
 ##  **Project Title**   
 A closer look at college enrollment rate in the United States 
