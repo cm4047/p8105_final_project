@@ -9,6 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 * Zhiye Lou (zl2978)  
 * Chen Mo (cm4047) 
 * Wenzhao Wu (ww2579)
+* Zhixin Yang (zy2440)
 
 ##  **Project Title**   
 A closer look at college enrollment rate in the United States 
