@@ -17,7 +17,7 @@ convert = function(x){
           convert_fips_to_names(FIPs = as.character(x)) 
   }
 cleaned = 
-        read_csv("data/raw.csv") %>% 
+        read_csv("raw.csv") %>% 
         janitor::clean_names() %>% 
         mutate(states = as.character(map(.x = statefip,~convert(.x))), ##output is a list, convert to  characters
                metropolitan_status = recode(metro, 
@@ -25,7 +25,7 @@ cleaned =
                                             "1" = "Not in metropolitan area",
                                             "2" = "in metroplitan and central city",
                                             "3" = "in metroplitian but not in central city",
-                                            "4"= "in metropolitian but mixed of central city"),
+                                            "4" = "in metropolitian but mixed of central city"),
                                 number_of_children = nchild,
                 gradeatt = recode(gradeatt,  ## get who is currently in his/her freshman year
                                   "7" = "1",
@@ -37,7 +37,7 @@ cleaned =
                              "10" = "1",
                              "11" = "1",
                              .default = "0"),
-               college_attendance_status =recode((as.numeric(gradeatt) + as.numeric(educ)), 
+               college_attendance_status = recode((as.numeric(gradeatt) + as.numeric(educ)), 
                                                  "1" = "Yes",
                                                  "2" = "Yes",
                                                  "0" = "No"),
@@ -52,8 +52,8 @@ cleaned =
                                     "2" = "Public school",
                                     "1" = "Not enrolled"),
                anually_family_income = replace(ftotinc, ftotinc == "9999999", NA)) %>% 
-        select(states, metropolitan_status, number_of_children, college_attendance_status,
-               highest_degree, school_type, anually_family_income, age)
-write_csv(cleaned,"./data/cleaned.csv")
+        select(year, age, states, metropolitan_status, number_of_children, college_attendance_status,
+               highest_degree, school_type, anually_family_income)
+write_csv(cleaned,"./cleaned.csv")
 ```
 
