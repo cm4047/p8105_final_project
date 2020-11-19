@@ -1,9 +1,17 @@
 ---
-title: "My awesome website"
+title: ""
 output: 
-  html_document:
-    toc: true
-    toc_float: true
-    theme: cerulean
+  html_document
 ---
-testing
+# College Attendance Rate Matters! 
+
+## Introduction
+It is undoubtedly that there are numerous of people are living in extreme poverty, and this also happened to the United States. One noticeable situation is that people with college or higher degrees are tend to earn more than others. Besides, one of the major social issues in the United States is the inequality in the higher education, and thus the college attendance rate really matters for reducing poverty in the United States. So our team is trying to find the relevant factors which influence the college enrollment rate in the United States.   
+
+In this project, with a dataset from IMPUS, we examined the factors influend the college attendance rate. In particular, we are interested in:  
+
+## Data
+The dataset we are using is IMPUS which provides census and survey data from around the world integrated across time and space. Since we were interested in the college attendance rate, we filtered the dataset to only include age between 18 to 24 years old. Besides, we only keep part of the original dataset because it is too big, and the final cleaned data has around 120,000 rows. We considered people who were currently enrolled in the college (including students who take a gap year from the university) or have graduated from the college before as the numerator of the college attendant rate.
+
+
+
