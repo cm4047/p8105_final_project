@@ -1,0 +1,62 @@
+---
+title: "Interactive map"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    source: embed
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(leaflet)
+library(plotly)
+library(flexdashboard)
+library(shiny)
+```
+
+```{r}
+clean_df = read_csv("./cleaned.csv")
+```
+
+College Attendance Rate Over Time
+===================================== 
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+```{r for_sidebar}
+states_choices = clean_df %>% pull(states) %>% unique()
+metropolitan_choices = clean_df %>% pull(metropolitan_status) %>% unique()
+children_range = clean_df %>% pull(number_of_children)
+income_range = clean_df %>% pull(number_of_children)
+
+selectInput(
+  "states_choice",
+  h3("State Choice"),
+  choices = states_choices,
+  selected = "NY"
+)
+sliderInput(
+  "children_range",
+  h3("Number of Children"),
+  0, 9, 
+  value = c(0, 4))
+
+sliderInput(
+  "income_range",
+  h3("Annually Family Income"),
+  -20000, 150000, 
+  value = c(0, 40000))
+
+radioButtons(
+  "metropolitan_choice",
+  h3("Metropolitan Status"),
+  choices = metropolitan_choices
+)
+```
+
+
+
+
