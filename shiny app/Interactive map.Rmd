@@ -24,20 +24,35 @@ clean_df = read_csv("./cleaned.csv") %>%
     college_attendance_status = as.numeric(college_attendance_status)
     ) %>% 
   mutate(
-    metropolitan_status = recode(metropolitan_status, "in metropolitian but mixed of central city" = "In metropolitan", "in metropolitan and central city" = "In metropolitan", "in metroplitian but not in central city" = "In metropolitan")
+    metropolitan_status = recode(metropolitan_status, "in metropolitian but mixed of central city" = "In metropolitan", "in metropolitan and central city" = "In metropolitan", "in metropolitian but not in central city" = "In metropolitan")
   )
+clean_all1 = 
+  clean_df %>% 
+  mutate(states = recode(states, .default = "ALL"))
+clean_all2 = 
+  clean_df %>% 
+  mutate(metropolitan_status = recode(metropolitan_status, .default = "ALL"))
+clean_all3 = 
+  clean_df %>% 
+  mutate(metropolitan_status = recode(metropolitan_status, .default = "ALL"),
+         states = recode(states, .default = "ALL")
+         )
+clean_final = 
+  rbind(clean_all1, clean_all3, clean_df,clean_all2)
 ```
 
 College Attendance Rate Over Time
 ===================================== 
 
-Column {.sidebar}
+Column{.sidebar}
 -----------------------------------------------------------------------
+
+
 ```{r for_sidebar}
-states_choices = clean_df %>% pull(states) %>% unique()
-metropolitan_choices = clean_df %>% pull(metropolitan_status) %>% unique()
-children_range = clean_df %>% pull(number_of_children)
-income_range = clean_df %>% pull(number_of_children)
+states_choices = clean_final %>% pull(states) %>% unique()
+metropolitan_choices = clean_final %>% pull(metropolitan_status) %>% unique()
+children_range = clean_final %>% pull(number_of_children)
+income_range = clean_final %>% pull(number_of_children)
 
 selectInput(
   "states_choice",
@@ -48,7 +63,7 @@ selectInput(
 
 sliderInput(
   "income_range",
-  h3("Annually Family Income"),
+  h3("Annual Family Income"),
   -20000, 150000, 
   value = c(-20000, 150000))
 
@@ -66,7 +81,7 @@ Column {.tabset}
 
 ```{r}
 renderPlotly({
-clean_df %>% 
+clean_final %>% 
   filter(
       states == input[["states_choice"]],
       metropolitan_status == input[["metropolitan_choice"]],
@@ -80,7 +95,18 @@ clean_df %>%
     ungroup() %>% 
   plot_ly(
     y = ~college_attendance_rate, x = ~year, color = ~states, mode = "lines+markers",
-    type = "scatter", colors = "viridis")
+    type = "scatter", colors = "viridis") %>% 
+    layout(
+      yaxis = list(
+        range = c(0,1)
+      ),
+      title = "College Attendance Rate Over Time (2008-2018)"
+    )
 })
 ```
 
+### Description  
+
+The line plot illustrates the college attendance rate from 2008 to 2018 across 52 states in the United States and the college attendance rate for different annual family income and different metropolitan status.  
+
+**Select ALL to find more information about the college attendance rate**

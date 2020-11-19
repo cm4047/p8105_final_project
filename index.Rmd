@@ -1,9 +1,9 @@
 ---
-title: ""
+title: <center>College Attendance Rate Matters! 
 output: 
   html_document
 ---
-# College Attendance Rate Matters! 
+<h2 style="text-align: center;" markdown="1">Exploring the college attendant rate in the United States</h2>   
 
 ## Introduction
 It is undoubtedly that there are numerous of people are living in extreme poverty, and this also happened to the United States. One noticeable situation is that people with college or higher degrees are tend to earn more than others. Besides, one of the major social issues in the United States is the inequality in the higher education, and thus the college attendance rate really matters for reducing poverty in the United States. So our team is trying to find the relevant factors which influence the college enrollment rate in the United States.   
