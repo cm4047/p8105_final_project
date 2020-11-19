@@ -18,7 +18,14 @@ library(shiny)
 ```
 
 ```{r}
-clean_df = read_csv("./cleaned.csv")
+clean_df = read_csv("./cleaned.csv") %>% 
+  mutate(
+    college_attendance_status = recode(college_attendance_status, "Yes" = "1", "No" = "0"),
+    college_attendance_status = as.numeric(college_attendance_status)
+    ) %>% 
+  mutate(
+    metropolitan_status = recode(metropolitan_status, "in metropolitian but mixed of central city" = "In metropolitan", "in metropolitan and central city" = "In metropolitan", "in metroplitian but not in central city" = "In metropolitan")
+  )
 ```
 
 College Attendance Rate Over Time
@@ -34,21 +41,16 @@ income_range = clean_df %>% pull(number_of_children)
 
 selectInput(
   "states_choice",
-  h3("State Choice"),
+  label = h3("Select State"),
   choices = states_choices,
   selected = "NY"
 )
-sliderInput(
-  "children_range",
-  h3("Number of Children"),
-  0, 9, 
-  value = c(0, 4))
 
 sliderInput(
   "income_range",
   h3("Annually Family Income"),
   -20000, 150000, 
-  value = c(0, 40000))
+  value = c(-20000, 150000))
 
 radioButtons(
   "metropolitan_choice",
@@ -57,6 +59,28 @@ radioButtons(
 )
 ```
 
+Column {.tabset}
+-----------------------------------------------------------------------
 
+### College Attendance Rate Cross Time
 
+```{r}
+renderPlotly({
+clean_df %>% 
+  filter(
+      states == input[["states_choice"]],
+      metropolitan_status == input[["metropolitan_choice"]],
+      anually_family_income %in% input[["income_range"]][1]:input[["income_range"]][2]) %>%
+  group_by(year) %>%
+  mutate(
+    number_1 = "1",
+    number_1 = as.numeric(number_1),
+    college_attendance_rate = sum(college_attendance_status)/sum(number_1)
+  ) %>% 
+    ungroup() %>% 
+  plot_ly(
+    y = ~college_attendance_rate, x = ~year, color = ~states, mode = "lines+markers",
+    type = "scatter", colors = "viridis")
+})
+```
 
