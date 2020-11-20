@@ -18,7 +18,7 @@ library(shiny)
 ```
 
 ```{r}
-clean_df = read_csv("./cleaned.csv") %>% 
+clean_df = read_csv("./data_shiny/cleaned.csv") %>% 
   mutate(
     college_attendance_status = recode(college_attendance_status, "Yes" = "1", "No" = "0"),
     college_attendance_status = as.numeric(college_attendance_status)
@@ -150,8 +150,8 @@ renderPlotly({
 	
 	# display value using color intensity
 	clean_df %>% 
-	filter(year == input[["year_choices"]]) %>%
-	group_by(year) %>%
+	filter(year == input$year_choices) %>%
+	group_by(year,states) %>%
   mutate(
     number_1 = "1",
     number_1 = as.numeric(number_1),
@@ -160,19 +160,19 @@ renderPlotly({
     ungroup() %>% 
 	plot_geo(locationmode = "USA-states") %>% 
 	add_trace(
-		z = ~college_attendance_rate,
+		z = ~ college_attendance_rate,
 		locations = ~states,
-		color = ~college_attendance_rate,
-		colors = "Reds",
-		# add text
-		text = ~paste(state_abb[states], sep = "")
+		color = ~ college_attendance_rate,
+		colors = "Reds"
 		) %>%
 	layout(
 		geo = geo1,
-		title = "US Map - State Statistics",
+		title = "College Attendance Rate Map",
 		legend = list(x = 100, y = 0.5)
 	)
 })
 ```
 
 ### Description  
+
+The College Attendance Rate map allows users to toggle between different years (2008-2018), visualizing regional differences across the U.S.  
