@@ -110,3 +110,69 @@ clean_final %>%
 The line plot illustrates the college attendance rate from 2008 to 2018 across 52 states in the United States and the college attendance rate for different annual family income and different metropolitan status.  
 
 **Select ALL to find more information about the college attendance rate**
+
+
+College Attendance Rate Map
+===================================== 
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+
+```{r for_sidebar2}
+year_choices = clean_final %>% pull(year) %>% unique()
+# year select box 
+selectInput("year_choices", label = h3("Choose year"),
+						choices = year_choices,
+						selected = 2008)
+```
+
+
+Column {.tabset}
+-----------------------------------------------------------------------
+
+### US MAP  
+
+```{r us_map}
+# for convert state abbreviations to state names
+state_abb = state.name
+names(state_abb) = state.abb
+
+# plot_geo
+renderPlotly({
+	# map plot setting
+	geo1 <- list(
+	scope = "usa",
+	projection = list(type = "state"),
+	showlakes = TRUE,
+	lakecolor = toRGB("white")
+	)
+	
+	# display value using color intensity
+	clean_df %>% 
+	filter(year == input[["year_choices"]]) %>%
+	group_by(year) %>%
+  mutate(
+    number_1 = "1",
+    number_1 = as.numeric(number_1),
+    college_attendance_rate = sum(college_attendance_status)/sum(number_1)
+  ) %>% 
+    ungroup() %>% 
+	plot_geo(locationmode = "USA-states") %>% 
+	add_trace(
+		z = ~college_attendance_rate,
+		locations = ~states,
+		color = ~college_attendance_rate,
+		colors = "Reds",
+		# add text
+		text = ~paste(state_abb[states], sep = "")
+		) %>%
+	layout(
+		geo = geo1,
+		title = "US Map - State Statistics",
+		legend = list(x = 100, y = c(0.1,0.3,0.5,0.7))
+	)
+})
+```
+
+### Description  
