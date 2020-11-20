@@ -1,10 +1,12 @@
 body {
-  background-image: url('https://miro.medium.com/max/5456/1*Vq4VvfWkREYNe2uRvGliRA.jpeg');
+  background-image: url('https://mipa.unram.ac.id/wp-content/uploads/2019/09/Savin-NY-Website-Background-Web.jpg');
   background-repeat: no-repeat;
-  background-size: 100%;
+  background-size: 250%;
+  font-size: 12.5pt
 }
 
 div {
-  background-color: rgba(255, 255, 255, 0.35)   /* 35% opaque white */;
-  padding: 0.25em;
+  background-color: rgba(255, 255, 255, 0.15)   /* 65% opaque white */;
+  padding: 0.003em;
 }
+
