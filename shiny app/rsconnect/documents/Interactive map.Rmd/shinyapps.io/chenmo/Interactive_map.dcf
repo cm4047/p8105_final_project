@@ -1,0 +1,12 @@
+name: Interactive_map
+title: Interactive_map
+username:
+account: chenmo
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3267874
+bundleId: 3882962
+url: https://chenmo.shinyapps.io/Interactive_map/
+when: 1605836511.76866
+asMultiple: FALSE
+asStatic: FALSE

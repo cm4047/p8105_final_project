@@ -1,0 +1,178 @@
+---
+title: "Interactive map"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    source: embed
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(leaflet)
+library(plotly)
+library(flexdashboard)
+library(shiny)
+```
+
+```{r}
+clean_df = read_csv("./data_shiny/cleaned.csv") %>% 
+  mutate(
+    college_attendance_status = recode(college_attendance_status, "Yes" = "1", "No" = "0"),
+    college_attendance_status = as.numeric(college_attendance_status)
+    ) %>% 
+  mutate(
+    metropolitan_status = recode(metropolitan_status, "in metropolitian but mixed of central city" = "In metropolitan", "in metropolitan and central city" = "In metropolitan", "in metropolitian but not in central city" = "In metropolitan")
+  )
+clean_all1 = 
+  clean_df %>% 
+  mutate(states = recode(states, .default = "ALL"))
+clean_all2 = 
+  clean_df %>% 
+  mutate(metropolitan_status = recode(metropolitan_status, .default = "ALL"))
+clean_all3 = 
+  clean_df %>% 
+  mutate(metropolitan_status = recode(metropolitan_status, .default = "ALL"),
+         states = recode(states, .default = "ALL")
+         )
+clean_final = 
+  rbind(clean_all1, clean_all3, clean_df,clean_all2)
+```
+
+College Attendance Rate Over Time
+===================================== 
+
+Column{.sidebar}
+-----------------------------------------------------------------------
+
+
+```{r for_sidebar}
+states_choices = clean_final %>% pull(states) %>% unique()
+metropolitan_choices = clean_final %>% pull(metropolitan_status) %>% unique()
+children_range = clean_final %>% pull(number_of_children)
+income_range = clean_final %>% pull(number_of_children)
+
+selectInput(
+  "states_choice",
+  label = h3("Select State"),
+  choices = states_choices,
+  selected = "NY"
+)
+
+sliderInput(
+  "income_range",
+  h3("Annual Family Income"),
+  -20000, 150000, 
+  value = c(-20000, 150000))
+
+radioButtons(
+  "metropolitan_choice",
+  h3("Metropolitan Status"),
+  choices = metropolitan_choices
+)
+```
+
+Column {.tabset}
+-----------------------------------------------------------------------
+
+### College Attendance Rate Cross Time
+
+```{r}
+renderPlotly({
+clean_final %>% 
+  filter(
+      states == input[["states_choice"]],
+      metropolitan_status == input[["metropolitan_choice"]],
+      anually_family_income %in% input[["income_range"]][1]:input[["income_range"]][2]) %>%
+  group_by(year) %>%
+  mutate(
+    number_1 = "1",
+    number_1 = as.numeric(number_1),
+    college_attendance_rate = sum(college_attendance_status)/sum(number_1)
+  ) %>% 
+    ungroup() %>% 
+  plot_ly(
+    y = ~college_attendance_rate, x = ~year, color = ~states, mode = "lines+markers",
+    type = "scatter", colors = "viridis") %>% 
+    layout(
+      yaxis = list(
+        range = c(0,1)
+      ),
+      title = "College Attendance Rate Over Time (2008-2018)"
+    )
+})
+```
+
+### Description  
+
+The line plot illustrates the college attendance rate from 2008 to 2018 across 52 states in the United States and the college attendance rate for different annual family income and different metropolitan status.  
+
+**Select ALL to find more information about the college attendance rate**
+
+
+College Attendance Rate Map
+===================================== 
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+
+```{r for_sidebar2}
+year_choices = clean_final %>% pull(year) %>% unique()
+# year select box 
+selectInput("year_choices", label = h3("Choose year"),
+						choices = year_choices,
+						selected = 2008)
+```
+
+
+Column {.tabset}
+-----------------------------------------------------------------------
+
+### US MAP  
+
+```{r us_map}
+# for convert state abbreviations to state names
+state_abb = state.name
+names(state_abb) = state.abb
+
+# plot_geo
+renderPlotly({
+	# map plot setting
+	geo1 <- list(
+	scope = "usa",
+	projection = list(type = "state"),
+	showlakes = TRUE,
+	lakecolor = toRGB("white")
+	)
+	
+	# display value using color intensity
+	clean_df %>% 
+	filter(year == input$year_choices) %>%
+	group_by(year,states) %>%
+  mutate(
+    number_1 = "1",
+    number_1 = as.numeric(number_1),
+    college_attendance_rate = sum(college_attendance_status)/sum(number_1)
+  ) %>% 
+    ungroup() %>% 
+	plot_geo(locationmode = "USA-states") %>% 
+	add_trace(
+		z = ~ college_attendance_rate,
+		locations = ~states,
+		color = ~ college_attendance_rate,
+		colors = "Reds"
+		) %>%
+	layout(
+		geo = geo1,
+		title = "College Attendance Rate Map",
+		legend = list(x = 100, y = 0.5)
+	)
+})
+```
+
+### Description  
+
+The College Attendance Rate map allows users to toggle between different years (2008-2018), visualizing regional differences across the U.S.  
