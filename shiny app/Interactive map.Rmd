@@ -31,14 +31,15 @@ clean_all1 =
   mutate(states = recode(states, .default = "ALL"))
 clean_all2 = 
   clean_df %>% 
-  mutate(metropolitan_status = recode(metropolitan_status, .default = "ALL"))
+  mutate(race = recode(race, .default = "ALL"))
 clean_all3 = 
   clean_df %>% 
-  mutate(metropolitan_status = recode(metropolitan_status, .default = "ALL"),
+  mutate(race = recode(race, .default = "ALL"),
          states = recode(states, .default = "ALL")
          )
+
 clean_final = 
-  rbind(clean_all1, clean_all3, clean_df,clean_all2)
+  rbind(clean_all1, clean_all3, clean_df, clean_all2)
 ```
 
 College Attendance Rate Over Time
@@ -53,6 +54,7 @@ states_choices = clean_final %>% pull(states) %>% unique()
 metropolitan_choices = clean_final %>% pull(metropolitan_status) %>% unique()
 children_range = clean_final %>% pull(number_of_children)
 income_range = clean_final %>% pull(number_of_children)
+race_choice = clean_final %>% pull(race) %>% unique()
 
 selectInput(
   "states_choice",
@@ -61,16 +63,24 @@ selectInput(
   selected = "NY"
 )
 
+selectInput(
+  "race_choice",
+  label = h3("Select Race"),
+  choices = race_choice,
+  selected = "ALL"
+)
 sliderInput(
   "income_range",
   h3("Annual Family Income"),
   -20000, 150000, 
   value = c(-20000, 150000))
 
-radioButtons(
+selectInput(
   "metropolitan_choice",
   h3("Metropolitan Status"),
-  choices = metropolitan_choices
+  multiple = T,
+  choices = metropolitan_choices,
+  selected = "mixed of metropolitian status"
 )
 ```
 
@@ -85,7 +95,8 @@ clean_final %>%
   filter(
       states == input[["states_choice"]],
       metropolitan_status == input[["metropolitan_choice"]],
-      anually_family_income %in% input[["income_range"]][1]:input[["income_range"]][2]) %>%
+      anually_family_income %in% input[["income_range"]][1]:input[["income_range"]][2],
+      race == input[["race_choice"]]) %>%
   group_by(year) %>%
   mutate(
     number_1 = "1",
@@ -107,7 +118,7 @@ clean_final %>%
 
 ### Description  
 
-The line plot illustrates the college attendance rate from 2008 to 2018 across 52 states in the United States and the college attendance rate for different annual family income and different metropolitan status.  
+The line plot illustrates the college attendance rate from 2008 to 2018 across 52 states in the United States and the college attendance rate for different annual family income, different metropolitan status, and different races.  
 
 **Select ALL to find more information about the college attendance rate**
 
@@ -138,6 +149,10 @@ Column {.tabset}
 state_abb = state.name
 names(state_abb) = state.abb
 
+#clean data for map
+clean_df_final = 
+        clean_df %>% 
+        select(year, states, college_attendance_status)
 # plot_geo
 renderPlotly({
 	# map plot setting
@@ -149,7 +164,7 @@ renderPlotly({
 	)
 	
 	# display value using color intensity
-	clean_df %>% 
+	clean_df_final %>% 
 	filter(year == input$year_choices) %>%
 	group_by(year,states) %>%
   mutate(
