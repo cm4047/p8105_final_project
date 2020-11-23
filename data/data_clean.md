@@ -43,8 +43,16 @@ cleaned =
                                     "3" = "Private school",
                                     "2" = "Public school",
                                     "1" = "Not enrolled"),
-               anually_family_income = replace(ftotinc, ftotinc == "9999999", NA)) %>% 
-        select(year, age, states, metropolitan_status, number_of_children, college_attendance_status,
+               anually_family_income = replace(ftotinc, ftotinc == "9999999", NA),
+               race = recode(race,
+                             "1" = "White",
+                             "2" = "African American",
+                             "3" = "American Indian or Alaska Native",
+                             "4" = "Chinese",
+                             "5" = "Japanese",
+                             "6" = "Other Asian or Pacific Islander",
+                             .default = "Others")) %>% 
+        select(year, age, states, metropolitan_status, race, number_of_children, college_attendance_status,
                highest_degree, school_type, anually_family_income)
 ```
 
