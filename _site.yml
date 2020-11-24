@@ -1,14 +1,13 @@
 name: "Yay internet!"
 output_dir: "."
 navbar:
+  type: inverse
   title: "Home"
   right:
-    - text: "About"
-      href: about.html
-    - icon: fa-envelope fa-lg
-      href: mailto:<you@youremail.com>
+    - text: "Fantastic interactive plots"
+      href: https://chenmo.shinyapps.io/Interactive_map/
     - icon: fa-github fa-lg
-      href: https://github.com/cm4047/p8105_final_project.git>/
+      href: https://github.com/cm4047/p8105_final_project.git/
 output:
   html_document:
     theme: journal
