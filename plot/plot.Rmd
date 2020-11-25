@@ -1,16 +1,16 @@
 ---
-title: "plot"
-author: "yangzhixin"
-date: "2020.11.24"
-output: html_document
+output:
+  html_document:
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
 ```
-
-## R Markdown
-
 
 ```{r rate-year}
 library(tidyverse)
@@ -30,7 +30,6 @@ pyear = ggplot(rate_year, aes(x=year, y=rate)) +
         scale_x_continuous(breaks = seq(2008, 2018, 2)) +
         transition_reveal(year)
 animate(pyear, duration = 5, fps = 20, width = 400, height = 400, renderer = gifski_renderer())
-anim_save("rate_year.gif",path="../plot")
 ```
 
 
@@ -47,7 +46,7 @@ pcity = ggplot(rate_city, aes(x=year, y=rate, color = metropolitan_status)) +
         labs(title = "Trend Over Time by Metropolitan", x="Year", y= "College Attendence Rate") +
         transition_reveal(year)
 animate(pcity, duration = 5, fps = 20, width = 600, height = 400, renderer = gifski_renderer())
-anim_save("ratebyCity.gif",path="../plot")
+
                        
 # plot_ly(rate_city, x=~year, y=~`in metropolitan and central city`, name = "in metropolitan and central city", type = "scatter", mode = "line") %>%
 #         add_trace(y=~`in metropolitian but mixed of central city`, name = "in metropolitian but mixed of central city", type = "scatter", mode = "line") %>%
@@ -94,8 +93,8 @@ pstate <- pstate + transition_states(states = year, transition_length = 4, state
  labs(title = 'College Attendance Rate per Year : {closest_state}', 
  x='',y='Total Suicides per year')
 
-animate(pstate,100,fps = 20,duration = 30, width = 950, height = 750, renderer = gifski_renderer())
-anim_save("ratebyState.gif",path="../plot")
+animate(pstate,fps = 20,duration = 30, width = 950, height = 750, renderer = gifski_renderer())
+
 # 
 # pstate = ggplot(rate_state, aes(x=rank, y=rate, color = states)) +
 #         geom_tile(aes(y = rank, height = rate, width = .9, color = NA))+
@@ -127,7 +126,6 @@ pincome = ggplot(rate_income, aes(x=year, y=rate, color = income)) +
         labs(title = "Trend Over Time by Income", x="Year", y= "College Attendence Rate") +
         transition_reveal(year)
 animate(pincome, duration = 5, fps = 20, width = 600, height = 400, renderer = gifski_renderer())
-anim_save("ratebyIncome.gif",path="../plot")
 # plot_ly(rate_income, x=~year, y=~`high`, name = "high income", type = "scatter", mode = "line") %>%
 #         add_trace(y=~`middle`, name = "middle income", type = "scatter", mode = "line") %>%
 #         add_trace(y=~`low`, name = "low income", type = "scatter", mode = "line")
@@ -147,7 +145,7 @@ prace = ggplot(rate_race, aes(x=year, y=rate, color = race)) +
         labs(title = "Trend Over Time by Race", x="Year", y= "College Attendence Rate") +
         transition_reveal(year)
 animate(prace, duration = 5, fps = 20, width = 600, height = 400, renderer = gifski_renderer())
-anim_save("ratebyRace.gif",path="../plot")
+
 # plot_ly(rate_race, x=~year, y=~`White`, name = "White", type = "scatter", mode = "line") %>%
 #         add_trace(y=~`African American`, name = "African American", type = "scatter", mode = "line") %>%
 #         add_trace(y=~`American Indian or Alaska Native`, name = "American Indian or Alaska Native", type = "scatter", mode = "line") %>%
@@ -171,7 +169,7 @@ pnoc = ggplot(rate_noc, aes(x=year, y=rate, color = noc)) +
         labs(title = "Trend Over Time by Number of Children", x="Year", y= "College Attendence Rate") +
         transition_reveal(year)
 animate(pnoc, duration = 5, fps = 20, width = 600, height = 400, renderer = gifski_renderer())
-anim_save("ratebyNoC.gif",path="../plot")
+
 # plot_ly(rate_noc, x=~year, y=~`0`, name = "0 children", type = "scatter", mode = "line") %>%
 #         add_trace(y=~`1-2`, name = "1-2 children", type = "scatter", mode = "line") %>%
 #         add_trace(y=~`3+`, name = "3+ children", type = "scatter", mode = "line")
@@ -185,12 +183,19 @@ anim_save("ratebyNoC.gif",path="../plot")
 
 ```{r bySchoolType}
 n_school <- data_omitna %>%
-        mutate(income = car::recode(`anually_family_income`, "lo:20000 = 'low';94500:hi='high';else = 'middle'")) %>%
-        group_by(year, school_type, income) %>%
-        summarize(n=n())
-        # pivot_wider(names_from =school_type, values_from = n)
-
-plot_ly(n_school, x=~year, y = ~n, color = ~school_type, frame = ~income, type = "scatter", mode = "line")
+        mutate(income = car::recode(`anually_family_income`, "lo:20000 = 'low';94500:hi='high';else = 'middle'"),
+               income = factor(income, levels = c("low","middle","high")))
+school_incomee = 
+        n_school %>% 
+        group_by(year, income) %>%
+        summarize(income_group = n()) 
+school_typee = 
+        n_school %>% 
+        group_by(year, income, school_type) %>% 
+        summarize(number = n()) %>% 
+        left_join(school_incomee, by = c("year","income")) %>% 
+        mutate(percentage = 100*number/income_group)
+plot_ly(school_typee, x=~year, y = ~percentage, color = ~school_type, frame = ~income, type = "scatter", mode = "line")
 # plot_ly(rate_school, x=~year, y=~`Private school`, name = "Private school", type = "scatter", mode = "line") %>%
 #         add_trace(y=~`Public school`, name = "Public school", type = "scatter", mode = "line") %>%
 #         add_trace(y=~`Not enrolled`, name = "Not enrolled", type = "scatter", mode = "line")
