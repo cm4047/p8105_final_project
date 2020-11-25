@@ -87,12 +87,13 @@ pstate <-ggplot(rate_state,aes(rank,group=states,fill=as.factor(states),color=as
  axis.text.y = element_blank(), 
  plot.margin = margin(1,1,1,4, 'cm')
  )
-pstate
+
 
 plt<-pstate + transition_states(states = year, transition_length = 4, state_length = 1) + 
  ease_aes('cubic-in-out') +
  labs(title = 'College Attendance Rate per Year : {closest_state}', 
  x='',y='Total Suicides per year')
+
 final_animation<-animate(plt,100,fps = 20,duration = 30, width = 950, height = 750, renderer = gifski_renderer())
 anim_save("ratebyState.gif",path="../plot")
 # 
@@ -108,9 +109,6 @@ anim_save("ratebyState.gif",path="../plot")
 #         transition_reveal(year)
 #         
 # pstate
-        
-animate(pstate, duration = 5, fps = 20, width = 600, height = 400, renderer = gifski_renderer())
-anim_save("ratebyCity.gif",path="../plot")
 ```
 
 ```{r byIncome}
@@ -170,8 +168,8 @@ pnoc = ggplot(rate_noc, aes(x=year, y=rate, color = noc)) +
         geom_line() +
         geom_point() +
         scale_x_continuous(breaks = seq(2008, 2018, 2)) + 
-        labs(title = "Trend Over Time by Number of Children", x="Year", y= "College Attendence Rate")
-        # transition_reveal(year)
+        labs(title = "Trend Over Time by Number of Children", x="Year", y= "College Attendence Rate") +
+        transition_reveal(year)
 animate(pnoc, duration = 5, fps = 20, width = 600, height = 400, renderer = gifski_renderer())
 anim_save("ratebyNoC.gif",path="../plot")
 # plot_ly(rate_noc, x=~year, y=~`0`, name = "0 children", type = "scatter", mode = "line") %>%
