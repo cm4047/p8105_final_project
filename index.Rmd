@@ -6,12 +6,12 @@ output:
     toc: False
 font-family: "Arial"
 ---
-<h2 style="text-align: center;" markdown="1">Exploring the college attendant rate in the United States</h2>   
+<h3 style="text-align: center;" markdown="1">Exploring the college attendant rate in the United States</h3>   
 <h6 style="text-align: center;" markdown="1">By: Zhiye Lou (zl2978) |  Chen Mo (cm4047) |  Wenzhao Wu (ww2579)  | Zhixin Yang (zy2440)</h6>
 
 <center>
+![](background.png){width=800px}
 
-![](homepage_picture.jpg){width=350px}
 </center>
 
 <br>

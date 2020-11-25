@@ -1,14 +1,19 @@
-name: "Yay internet!"
+name: "settings"
 output_dir: "."
 navbar:
-  type: inverse
-  title: "Home"
+  title: "college attendant rate project"
   right:
     - text: "Fantastic interactive plots"
+      icon: fa-quidditch fa-lg
       href: https://chenmo.shinyapps.io/Interactive_map/
+    - text: "fascinating gif plots"
+      icon: fa-drafting-compass fa-lg
+      href: plot.html
+    - text: "rigorous regression"
+      icon: fa-calculator fa-lg
+      href: regression.html
     - icon: fa-github fa-lg
       href: https://github.com/cm4047/p8105_final_project.git/
 output:
   html_document:
-    theme: journal
     css: background.css
