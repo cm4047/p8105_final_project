@@ -43,7 +43,7 @@ tidied =
          college = as.numeric(recode(college, "Yes" = "1", "No" = "0")),
          race = as.factor(race),
          noc = as.factor(noc),
-         city = recode(city, "in metropolitian but mixed of central city" = "metro mixed central", "in metropolitan and central city" = "metro & central", "in metropolitan but not in central city" = "metro not central", "mixed of metropolitian status" = "mixed metro", "Not in metropolitan area" = "non-metro"),
+         city = recode(city, "in metropolitian but mixed of central city" = "metro mixed central", "in metropolitan and central city" = "metro & central", "in metropolitan but not in central city" = "metro not central", "mixed of metropolitian status" = "mixed metro", "Not in metropolitan area" = "non-metro","in metropolitian but not in central city" = "metro not central"),
          race = recode(race, "American Indian or Alaska Native" = "AmeInd/AK", "Other Asian or Pacific Islander" = "Asian/Pacific", "in metropolitian but not in central city" = "metro not central")) %>%
   drop_na(income)
 
