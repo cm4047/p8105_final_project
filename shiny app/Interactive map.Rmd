@@ -63,10 +63,11 @@ selectInput(
   selected = "NY"
 )
 
-selectInput(
+radioButtons(
   "race_choice",
   label = h3("Select Race"),
   choices = race_choice,
+  width = "160%",
   selected = "ALL"
 )
 sliderInput(
@@ -75,12 +76,12 @@ sliderInput(
   -20000, 150000, 
   value = c(-20000, 150000))
 
-selectInput(
+checkboxGroupInput(
   "metropolitan_choice",
   h3("Metropolitan Status"),
-  multiple = T,
+  width = "160%",
   choices = metropolitan_choices,
-  selected = "mixed of metropolitian status"
+  selected = c("mixed of metropolitian status", "In metropolitan", "Not in metropolitan area")
 )
 ```
 

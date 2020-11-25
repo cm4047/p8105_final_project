@@ -5,8 +5,8 @@ account: chenmo
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3267874
-bundleId: 3883345
+bundleId: 3893540
 url: https://chenmo.shinyapps.io/Interactive_map/
-when: 1605845454.18859
+when: 1606109040.69084
 asMultiple: FALSE
 asStatic: FALSE
