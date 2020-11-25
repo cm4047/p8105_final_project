@@ -29,6 +29,7 @@ options(
 
 scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
+
 ```
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
@@ -156,7 +157,7 @@ $$ \hat{percent} = \beta_0 + \beta_1income + \beta_2race + \beta_3city + \beta_4
 
 The dataframe used for the following analysis excludes data when percent(attendance rate) equals to 0 and 1. And the predictor NOC decreases to 6 levels.
 
-```{r}
+```{r echo = FALSE, warning = FALSE, message = FALSE}
 attend = 
   all %>%
   filter(percent != "0",
@@ -186,7 +187,7 @@ For the predictor NOC, the significant association is only observed for the grou
 
 ### Model Diagnostics
 
-```{r}
+```{r echo = FALSE, warning = FALSE, message = FALSE}
 par(mfrow=c(2,2))
 plot(fit)
 ```
@@ -194,7 +195,7 @@ plot(fit)
 **Comments:** Based on the "Theoretical Quantiles" graph, the residuals are seen to have a nearly normal distribution, or the points fall on/around the line except for those near two ends.The graph of "Residuals s Fitted" supports residuals have a mean of 0. A few outliers are observed in the "Residuals vs Leverage" plot, but the cook's distance is not too large, so that there's no big influence on the regression model. Plus, the points are randomly distributed around the line in the graph of "scale-location", so the residuals have a constant variance. Thus, the assumptions of linear models
 
 
-```{r}
+```{r echo = FALSE, warning = FALSE, message = FALSE}
 
 attend %>%
   modelr::add_residuals(fit) %>%
@@ -212,22 +213,25 @@ attend %>%
 
 It is applied to assess significance of a categorical predictor with more than 2 levels, i.e. noc, city, race.
 
-```{r}
+```{r echo = FALSE, warning = FALSE, message = FALSE}
 fit_null1 = lm(percent~income + noc + city, data = all)
 fit_alt1 = lm(percent~income + race + city + noc, data = all)
-anova(fit_null1, fit_alt1) %>% broom::tidy()
+anova(fit_null1, fit_alt1) %>% broom::tidy() %>%
+  knitr::kable(digits = 3)
 ```
 
-```{r}
+```{r echo = FALSE, warning = FALSE, message = FALSE}
 fit_null2 = lm(percent~income + race + noc, data = all)
 fit_alt2 = lm(percent~income + race + city + noc, data = all)
-anova(fit_null2, fit_alt2) %>% broom::tidy()
+anova(fit_null2, fit_alt2) %>% broom::tidy() %>%
+  knitr::kable(digits = 3)
 ```
 
-```{r}
+```{r echo = FALSE, warning = FALSE, message = FALSE}
 fit_null3 = lm(percent~income + race + city, data = all)
 fit_alt3 = lm(percent~income + race + city + noc, data = all)
-anova(fit_null3, fit_alt3) %>% broom::tidy()
+anova(fit_null3, fit_alt3) %>% broom::tidy() %>%
+  knitr::kable(digits = 3)
 ```
 
 **Comments:** The ANOVA tests for all three groups indicate there's at least two of the sub-populations differ significantly in respect of the attendance rate. 
