@@ -1,0 +1,235 @@
+---
+title: "Regression Analysis"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+
+```{r setup, echo = FALSE, warning = FALSE, message = FALSE}
+library(tidyverse)
+library(corrplot)
+library(modelr)
+
+set.seed(1)
+
+knitr::opts_chunk$set(
+  fig.width = 12,
+  fig.asp = .6,
+  out.width = "90%"
+)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+```
+
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+tidied = 
+  read.csv("./data/cleaned.csv") %>%
+  rename(city = metropolitan_status,
+         noc = number_of_children,
+         college = college_attendance_status,
+         income = anually_family_income) %>%
+  mutate(city = as.factor(city),
+         college = as.numeric(recode(college, "Yes" = "1", "No" = "0")),
+         race = as.factor(race),
+         noc = as.factor(noc),
+         city = recode(city, "in metropolitian but mixed of central city" = "metro mixed central", "in metropolitan and central city" = "metro & central", "in metropolitan but not in central city" = "metro not central", "mixed of metropolitian status" = "mixed metro", "Not in metropolitan area" = "non-metro"),
+         race = recode(race, "American Indian or Alaska Native" = "AmeInd/AK", "Other Asian or Pacific Islander" = "Asian/Pacific", "in metropolitian but not in central city" = "metro not central")) %>%
+  drop_na(income)
+
+all = 
+  tidied %>%
+  mutate(race = fct_infreq(race),
+         city = fct_infreq(city),
+         noc = fct_inseq(noc)) %>%
+  group_by(year, age, city, race, noc, states) %>%
+  mutate(count = "1",
+         count = as.numeric(count),
+         percent = sum(college)/sum(count)) %>%
+  ungroup()
+```
+
+## Data Description
+
+
+### Composition
+
+#### Race 
+
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+all %>%
+  group_by(year, race) %>%
+  summarise(race_count = sum(count)) %>%
+  ggplot(aes(x = year, y = race_count, fill = race)) +
+  geom_bar(alpha = 0.5, stat = "identity") +
+  labs(x = "Year",
+       y = "Race count",
+       title = "Race Distribution") +
+  scale_x_continuous(breaks = seq(2008, 2018, 1),labels = c(2008:2018)) 
+        
+```
+
+
+#### Geography
+
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+all %>%
+  group_by(year, city) %>%
+  summarise(city_count = sum(count)) %>%
+  ggplot(aes(x = year, y = city_count, fill = city)) +
+  geom_bar(alpha = 0.5, stat = "identity") +
+  labs(x = "Year",
+       y = "City count",
+       title = "City Distribution") +
+  scale_x_continuous(breaks = seq(2008, 2018, 1),
+                   labels = c(2008:2018)) 
+     
+```
+
+
+#### Number of Children
+
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+all %>%
+  group_by(year, noc) %>%
+  summarise(noc_count = sum(count)) %>%
+  ggplot(aes(x = year, y = noc_count, fill = noc)) +
+  geom_bar(alpha = 0.5, stat = "identity") +
+  labs(x = "Year",
+       y = "NOC count",
+       title = "Number of Children") +
+  scale_x_continuous(breaks = seq(2008, 2018, 1),
+                   labels = c(2008:2018)) 
+```
+
+
+## Correlation Matrix
+
+
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+corr_data = 
+  cor(cbind(enrollment_rate = pull(all, percent),
+        model.matrix(percent~income + race + city + noc, data = all)[,-1])
+  )
+
+corr_data %>% 
+  corrplot(method = "color", addCoef.col = "black", tl.col = "black", tl.srt = 45, insig = "blank" , number.cex = 0.7, diag = FALSE)
+
+
+```
+
+**Comments:** From the correlation matrix, it could be observed that the correlation between any two predictors is not greater than 0.8, which implies there is less likely to have multicollinearity among these covariates.The predictors tend to be independent of each other.  Values less than 0 indicate a negative correlation; values greater than 0 indicate a positive correlation. 
+
+
+## Modeling
+
+
+### Predictors
+
+* race: Race with 7 levels;
+
+* city: Metropolitan Status with 5 levels;
+
+* noc: Number of Children with 9 levels;
+
+* income: Annually Family Income.
+
+### Outcome
+
+* percent: Enrollment rate is calculated after grouping by year, age, city, race, noc and states variables; highest_degree and school_type are not grouped since both variables are directly correlated with the enrollment/attendance rate. 
+
+
+### Multiple Linear Regression 
+
+The fitted model:
+
+$$ \hat{percent} = \beta_0 + \beta_1income + \beta_2race + \beta_3city + \beta_4noc$$
+
+The dataframe used for the following analysis excludes data when percent(attendance rate) equals to 0 and 1. And the predictor NOC decreases to 6 levels.
+
+```{r}
+attend = 
+  all %>%
+  filter(percent != "0",
+         percent != "1")
+```
+
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+fit = lm(percent~income + race + city + noc, data = attend)
+
+fit %>%
+  broom::tidy() %>%
+  mutate(term = str_replace(term, "^race", "Race:"),
+         term = str_replace(term, "^city", "City:"),
+         term = str_replace(term, "^noc", "NOC:")) %>%
+  knitr::kable(digits = 3)
+  
+```
+
+**Comments:** The table above displays results of the multiple linear regression with filtered categories. As we can see from the summary, there is a significant association between annually family income and college attendance rate.
+
+However, the association between race groups of American Indian/Alaska Natives or Japanese and attendance rate is not significant, compared to the White.
+
+In addition, for one unit increase in "city", the estimated college attendance rate will decrease to some extent, adjusting for other predictors.
+
+For the predictor NOC, the significant association is only observed for the group of 1 or 2 children in the family.
+
+
+### Model Diagnostics
+
+```{r}
+par(mfrow=c(2,2))
+plot(fit)
+```
+
+**Comments:** Based on the "Theoretical Quantiles" graph, the residuals are seen to have a nearly normal distribution, or the points fall on/around the line except for those near two ends.The graph of "Residuals s Fitted" supports residuals have a mean of 0. A few outliers are observed in the "Residuals vs Leverage" plot, but the cook's distance is not too large, so that there's no big influence on the regression model. Plus, the points are randomly distributed around the line in the graph of "scale-location", so the residuals have a constant variance. Thus, the assumptions of linear models
+
+
+```{r}
+
+attend %>%
+  modelr::add_residuals(fit) %>%
+  ggplot(aes(x = resid)) +
+  geom_histogram() +
+  labs(title = "Residuals Distribution")
+
+```
+
+**Comment:** After filtering out the attendance rate of "0" in the dataset, the residuals almost follow a normal distribution, and no extreme outliers are observed.
+
+
+
+### Hypothesis Testing
+
+It is applied to assess significance of a categorical predictor with more than 2 levels, i.e. noc, city, race.
+
+```{r}
+fit_null1 = lm(percent~income + noc + city, data = all)
+fit_alt1 = lm(percent~income + race + city + noc, data = all)
+anova(fit_null1, fit_alt1) %>% broom::tidy()
+```
+
+```{r}
+fit_null2 = lm(percent~income + race + noc, data = all)
+fit_alt2 = lm(percent~income + race + city + noc, data = all)
+anova(fit_null2, fit_alt2) %>% broom::tidy()
+```
+
+```{r}
+fit_null3 = lm(percent~income + race + city, data = all)
+fit_alt3 = lm(percent~income + race + city + noc, data = all)
+anova(fit_null3, fit_alt3) %>% broom::tidy()
+```
+
+**Comments:** The ANOVA tests for all three groups indicate there's at least two of the sub-populations differ significantly in respect of the attendance rate. 
+
+
