@@ -55,7 +55,8 @@ all =
   group_by(year, age, city, race, noc, states) %>%
   mutate(count = "1",
          count = as.numeric(count),
-         percent = sum(college)/sum(count)) %>%
+         incoe = income/10000,
+         percent = 100*sum(college)/sum(count)) %>%
   ungroup()
 ```
 
@@ -115,7 +116,6 @@ all %>%
 
 ## Correlation Matrix
 
-
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
 corr_data = 
   cor(cbind(enrollment_rate = pull(all, percent),
@@ -153,21 +153,14 @@ corr_data %>%
 
 The fitted model:
 
-$$ \hat{percent} = \beta_0 + \beta_1income + \beta_2race + \beta_3city + \beta_4noc$$
+$$ \hat{percent} = \beta_0 + \beta_1income + \beta_2race + \beta_3city + \beta_4noc + \varepsilon_i$$
 
 The dataframe used for the following analysis excludes data when percent(attendance rate) equals to 0 and 1. And the predictor NOC decreases to 6 levels.
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
-attend = 
-  all %>%
-  filter(percent != "0",
-         percent != "1")
-```
+fit_linear = lm(percent~income + race + city + noc, data = all)
 
-```{r echo = FALSE, warning = FALSE, message = FALSE}
-fit = lm(percent~income + race + city + noc, data = attend)
-
-fit %>%
+fit_linear %>%
   broom::tidy() %>%
   mutate(term = str_replace(term, "^race", "Race:"),
          term = str_replace(term, "^city", "City:"),
@@ -185,55 +178,66 @@ In addition, for one unit increase in "city", the estimated college attendance r
 For the predictor NOC, the significant association is only observed for the group of 1 or 2 children in the family.
 
 
+#### Linear regression for African American 
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+AA_df = all %>% 
+  filter(race == "African American")
+fit_AA = lm(percent~income  + city + noc, data = AA_df)
+fit_AA %>%
+  broom::tidy() %>%
+  mutate(term = str_replace(term, "^race", "Race:"),
+         term = str_replace(term, "^city", "City:"),
+         term = str_replace(term, "^noc", "NOC:")) %>%
+  knitr::kable(digits = 3)
+```
+
+#### Linear regression for non African American 
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+Other_df = all %>% 
+  filter(race != "African American")
+fit_other = lm(percent~income  + city + noc, data = Other_df)
+fit_other %>%
+  broom::tidy() %>%
+  mutate(term = str_replace(term, "^race", "Race:"),
+         term = str_replace(term, "^city", "City:"),
+         term = str_replace(term, "^noc", "NOC:")) %>%
+  knitr::kable(digits = 3)
+```
+
+**Comment:** The two regression above shown a significantly difference in the coefficient of income, and this might suggest several discrimination, detailed discussion is in the conclusion part.
+
+
 ### Model Diagnostics
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
 par(mfrow=c(2,2))
-plot(fit)
+plot(fit_linear)
 ```
 
-**Comments:** Based on the "Theoretical Quantiles" graph, the residuals are seen to have a nearly normal distribution, or the points fall on/around the line except for those near two ends.The graph of "Residuals s Fitted" supports residuals have a mean of 0. A few outliers are observed in the "Residuals vs Leverage" plot, but the cook's distance is not too large, so that there's no big influence on the regression model. Plus, the points are randomly distributed around the line in the graph of "scale-location", so the residuals have a constant variance. Thus, the assumptions of linear models
+**Comments:** Based on the "Theoretical Quantiles" graph, the residuals are not quite normally distributed especially near both ends. The points in the middle fall on/around the line.The graph of "Residuals s Fitted" supports residuals have a mean of 0. A few outliers are observed in the "Residuals vs Leverage" plot, and one of them has influenced the accuracy of regression given the large cook's distance. Plus, residuals are biased around the horizontal line. Thus, the assumptions of linear models are not completely supported. 
 
+
+### Logit Transformation
+
+Given the results of linear regression with raw data, the following analysis is based on transformed percent values. Original values of 0 and 1 are transformed to "-Inf" and "Inf" respectively, thus cannot be included in regression analysis. 
+
+$$ percent^* = \beta_0 + \beta_1income + \beta_2race + \beta_3city + \beta_4noc + \varepsilon_i$$
+Transformation: $$ percent^* = log(\frac{percent}{100-percent})$$
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
+transf = all %>%
+  mutate(transf_percent = log(percent/(100-percent))) %>%
+  filter(transf_percent != "-Inf",
+         transf_percent != "Inf")
 
-attend %>%
-  modelr::add_residuals(fit) %>%
-  ggplot(aes(x = resid)) +
-  geom_histogram() +
-  labs(title = "Residuals Distribution")
+fit_logit = lm(transf_percent~income + race + city + noc, data = transf)
 
+plot(fit_logit)
 ```
 
-**Comment:** After filtering out the attendance rate of "0" in the dataset, the residuals almost follow a normal distribution, and no extreme outliers are observed.
+**Comment:** After transformation and filtration of data, the residuals are distributed approximately normal as compared to the previous distribution, even though some points near the bottom still don't fit well. The variance seems constant, and no more influential outliers are observed in this case. 
 
 
+## Discussion
 
-### Hypothesis Testing
-
-It is applied to assess significance of a categorical predictor with more than 2 levels, i.e. noc, city, race.
-
-```{r echo = FALSE, warning = FALSE, message = FALSE}
-fit_null1 = lm(percent~income + noc + city, data = all)
-fit_alt1 = lm(percent~income + race + city + noc, data = all)
-anova(fit_null1, fit_alt1) %>% broom::tidy() %>%
-  knitr::kable(digits = 3)
-```
-
-```{r echo = FALSE, warning = FALSE, message = FALSE}
-fit_null2 = lm(percent~income + race + noc, data = all)
-fit_alt2 = lm(percent~income + race + city + noc, data = all)
-anova(fit_null2, fit_alt2) %>% broom::tidy() %>%
-  knitr::kable(digits = 3)
-```
-
-```{r echo = FALSE, warning = FALSE, message = FALSE}
-fit_null3 = lm(percent~income + race + city, data = all)
-fit_alt3 = lm(percent~income + race + city + noc, data = all)
-anova(fit_null3, fit_alt3) %>% broom::tidy() %>%
-  knitr::kable(digits = 3)
-```
-
-**Comments:** The ANOVA tests for all three groups indicate there's at least two of the sub-populations differ significantly in respect of the attendance rate. 
-
-
+The outcome of interest in this study is the attendance rate which is composed of percentage values inflated with 0 and 1. According to the model diagnosis, the linear regression is not a quite good choice to analyze data, and the results of MLR could be doubtful. The logit transformation provides a better distribution of residuals, while the results are still biased because the data excludes percent of 0 and 1, which will make great influence on predicting certain subgroups' outcome, such as African Americans. A future research question similar to our topic would be if going to college is related to different characteristics, and in this case, a logistic regression could be done in a more straightforward way. 
