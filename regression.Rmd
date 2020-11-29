@@ -51,17 +51,12 @@ all =
   tidied %>%
   mutate(race = fct_infreq(race),
          city = fct_infreq(city),
-         noc = fct_inseq(noc),
-         income = (income/10000)) %>%
+         noc = fct_inseq(noc)) %>%
   group_by(year, age, city, race, noc, states) %>%
   mutate(count = "1",
          count = as.numeric(count),
-<<<<<<< HEAD
-         incoe = income/10000,
+         income = income/10000,
          percent = 100*sum(college)/sum(count)) %>%
-=======
-         percent = (100*sum(college)/sum(count))) %>%
->>>>>>> 981ec516d02b3494bb1e083171f6c9517829113f
   ungroup()
 ```
 
@@ -236,7 +231,7 @@ transf = all %>%
          transf_percent != "Inf")
 
 fit_logit = lm(transf_percent~income + race + city + noc, data = transf)
-
+par(mfrow=c(2,2))
 plot(fit_logit)
 ```
 
