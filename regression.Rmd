@@ -182,34 +182,6 @@ In addition, for one unit increase in "city", the estimated college attendance r
 
 For the predictor NOC, the significant association is only observed for the group of 1 or 2 children in the family.
 
-#### Linear regression for African American 
-```{r echo = FALSE, warning = FALSE, message = FALSE}
-AA_df = all %>% 
-  filter(race == "African American")
-fit = lm(percent~income  + city + noc, data = AA_df)
-
-fit %>%
-  broom::tidy() %>%
-  mutate(term = str_replace(term, "^race", "Race:"),
-         term = str_replace(term, "^city", "City:"),
-         term = str_replace(term, "^noc", "NOC:")) %>%
-  knitr::kable(digits = 3)
-```
-
-#### Linear regression for non African American 
-```{r echo = FALSE, warning = FALSE, message = FALSE}
-Other_df = all %>% 
-  filter(race != "African American")
-fit = lm(percent~income  + city + noc, data = Other_df)
-
-fit %>%
-  broom::tidy() %>%
-  mutate(term = str_replace(term, "^race", "Race:"),
-         term = str_replace(term, "^city", "City:"),
-         term = str_replace(term, "^noc", "NOC:")) %>%
-  knitr::kable(digits = 3)
-```
-**Comment:** The two regression above shown a significantly difference in the coeffieicent of income, and this might suggest several discrimination, detailed discussion is in the conclusion part.
 
 #### Linear regression for African American 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
