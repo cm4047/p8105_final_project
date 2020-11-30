@@ -146,7 +146,7 @@ corr_data %>%
 
 ### Outcome
 
-* percent: Enrollment rate is calculated after grouping by year, age, city, race, noc and states variables; highest_degree and school_type are not grouped since both variables are directly correlated with the enrollment/attendance rate. 
+* percent (%): Enrollment rate is calculated after grouping by year, age, city, race, noc and states variables; highest_degree and school_type are not grouped since both variables are directly correlated with the enrollment/attendance rate. 
 
 
 ### Multiple Linear Regression 
@@ -155,7 +155,6 @@ The fitted model:
 
 $$ \hat{percent} = \beta_0 + \beta_1income + \beta_2race + \beta_3city + \beta_4noc + \varepsilon_i$$
 
-The dataframe used for the following analysis excludes data when percent(attendance rate) equals to 0 and 1. And the predictor NOC decreases to 6 levels.
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
 fit_linear = lm(percent~income + race + city + noc, data = all)
