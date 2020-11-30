@@ -128,7 +128,7 @@ corr_data %>%
 
 ```
 
-**Comments:** From the correlation matrix, it could be observed that the correlation between any two predictors is not greater than 0.8, which implies there is less likely to have multicollinearity among these covariates.The predictors tend to be independent of each other.  Values less than 0 indicate a negative correlation; values greater than 0 indicate a positive correlation. 
+**Comments:** From the correlation matrix, it could be observed that the correlation between any two subgroups of predictors is less than 0.3, indicating there is a weak or no correlation between covariates and less likely to have multicollinearity.The predictors tend to be independent of each other.  Values less than 0 indicate a negative correlation; values greater than 0 indicate a positive correlation. 
 
 
 ## Modeling
@@ -136,13 +136,13 @@ corr_data %>%
 
 ### Predictors
 
-* race: Race with 7 levels;
+* race: Race with 7 levels: `r levels(all$race)`
 
-* city: Metropolitan Status with 5 levels;
+* city: Metropolitan Status with 5 levels: `r levels(all$city)`
 
-* noc: Number of Children with 9 levels;
+* noc: Number of Children with 9 levels: `r levels(all$noc)`
 
-* income: Annually Family Income in 10,000 dollars.
+* income: Annually Family Income in 10,000 dollars, with a range of (`r min(all$income)`, `r max(all$income)`).
 
 ### Outcome
 
@@ -153,7 +153,7 @@ corr_data %>%
 
 The fitted model:
 
-$$ \hat{percent} = \beta_0 + \beta_1income + \beta_2race + \beta_3city + \beta_4noc + \varepsilon_i$$
+$$ \hat{percent} = \beta_0 + \beta_1income + \beta_2race + \beta_3city + \beta_4noc$$
 
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
@@ -168,7 +168,7 @@ fit_linear %>%
   
 ```
 
-**Comments:** The table above displays results of the multiple linear regression with filtered categories. As we can see from the summary, there is a significant association between annually family income and college attendance rate, however, the interesting part is there is actually a negative effect on the college attendant rate, but if we look through the overall trend plot from [here](plot.html) between income and college attendant rate, we can find that it should be a positive association, and thus we did 2 further regressions after stratifying the race in this section.
+**Comments:** The table above displays results of the multiple linear regression. As we can see from the summary, there is a significant association between annually family income and college attendance rate, however, the interesting part is there is actually a negative effect on the college attendant rate, but if we look through the overall trend plot from [here](plot.html) between income and college attendant rate, we can find that it should be a positive association, and thus we did 2 further regressions after stratifying the race in this section.
 
 However, the association between race groups of American Indian/Alaska Natives and attendance rate is not significant, compared to the White.
 
@@ -220,7 +220,7 @@ plot(fit_linear)
 
 Given the results of linear regression with raw data, the following analysis is based on transformed percent values. Original values of 0 and 1 are transformed to "-Inf" and "Inf" respectively, thus cannot be included in regression analysis. 
 
-$$ percent^* = \beta_0 + \beta_1income + \beta_2race + \beta_3city + \beta_4noc + \varepsilon_i$$
+$$ percent^* = \beta_0 + \beta_1income + \beta_2race + \beta_3city + \beta_4noc$$
 Transformation: $$ percent^* = log(\frac{percent}{100-percent})$$
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}

@@ -427,17 +427,17 @@ div.tocify {
 <div id="correlation-matrix" class="section level2">
 <h2>Correlation Matrix</h2>
 <p><img src="regression_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
-<p><strong>Comments:</strong> From the correlation matrix, it could be observed that the correlation between any two predictors is not greater than 0.8, which implies there is less likely to have multicollinearity among these covariates.The predictors tend to be independent of each other. Values less than 0 indicate a negative correlation; values greater than 0 indicate a positive correlation.</p>
+<p><strong>Comments:</strong> From the correlation matrix, it could be observed that the correlation between any two subgroups of predictors is less than 0.3, indicating there is a weak or no correlation between covariates and less likely to have multicollinearity.The predictors tend to be independent of each other. Values less than 0 indicate a negative correlation; values greater than 0 indicate a positive correlation.</p>
 </div>
 <div id="modeling" class="section level2">
 <h2>Modeling</h2>
 <div id="predictors" class="section level3">
 <h3>Predictors</h3>
 <ul>
-<li><p>race: Race with 7 levels;</p></li>
-<li><p>city: Metropolitan Status with 5 levels;</p></li>
-<li><p>noc: Number of Children with 9 levels;</p></li>
-<li><p>income: Annually Family Income in 10,000 dollars.</p></li>
+<li><p>race: Race with 7 levels: White, African American, Others, Asian/Pacific, Chinese, AmeInd/AK, Japanese</p></li>
+<li><p>city: Metropolitan Status with 5 levels: metro mixed central, metro not central, metro &amp; central, non-metro, mixed metro</p></li>
+<li><p>noc: Number of Children with 9 levels: 0, 1, 2, 3, 4, 5, 6, 7, 9</p></li>
+<li><p>income: Annually Family Income in 10,000 dollars, with a range of (-1.56, 141.73).</p></li>
 </ul>
 </div>
 <div id="outcome" class="section level3">
@@ -449,7 +449,7 @@ div.tocify {
 <div id="multiple-linear-regression" class="section level3">
 <h3>Multiple Linear Regression</h3>
 <p>The fitted model:</p>
-<p><span class="math display">\[ \hat{percent} = \beta_0 + \beta_1income + \beta_2race + \beta_3city + \beta_4noc + \varepsilon_i\]</span></p>
+<p><span class="math display">\[ \hat{percent} = \beta_0 + \beta_1income + \beta_2race + \beta_3city + \beta_4noc\]</span></p>
 <table>
 <thead>
 <tr class="header">
@@ -603,7 +603,7 @@ div.tocify {
 </tr>
 </tbody>
 </table>
-<p><strong>Comments:</strong> The table above displays results of the multiple linear regression with filtered categories. As we can see from the summary, there is a significant association between annually family income and college attendance rate, however, the interesting part is there is actually a negative effect on the college attendant rate, but if we look through the overall trend plot from <a href="plot.html">here</a> between income and college attendant rate, we can find that it should be a positive association, and thus we did 2 further regressions after stratifying the race in this section.</p>
+<p><strong>Comments:</strong> The table above displays results of the multiple linear regression. As we can see from the summary, there is a significant association between annually family income and college attendance rate, however, the interesting part is there is actually a negative effect on the college attendant rate, but if we look through the overall trend plot from <a href="plot.html">here</a> between income and college attendant rate, we can find that it should be a positive association, and thus we did 2 further regressions after stratifying the race in this section.</p>
 <p>However, the association between race groups of American Indian/Alaska Natives and attendance rate is not significant, compared to the White.</p>
 <p>In addition, for one unit increase in “city”, the estimated college attendance rate will decrease to some extent, adjusting for other predictors.</p>
 <p>For the predictor NOC, the significant association is only observed for the group of 1 or 2 children in the family.</p>
@@ -831,7 +831,7 @@ div.tocify {
 <div id="logit-transformation" class="section level3">
 <h3>Logit Transformation</h3>
 <p>Given the results of linear regression with raw data, the following analysis is based on transformed percent values. Original values of 0 and 1 are transformed to “-Inf” and “Inf” respectively, thus cannot be included in regression analysis.</p>
-<p><span class="math display">\[ percent^* = \beta_0 + \beta_1income + \beta_2race + \beta_3city + \beta_4noc + \varepsilon_i\]</span> Transformation: <span class="math display">\[ percent^* = log(\frac{percent}{100-percent})\]</span></p>
+<p><span class="math display">\[ percent^* = \beta_0 + \beta_1income + \beta_2race + \beta_3city + \beta_4noc\]</span> Transformation: <span class="math display">\[ percent^* = log(\frac{percent}{100-percent})\]</span></p>
 <p><img src="regression_files/figure-html/unnamed-chunk-10-1.png" width="90%" /></p>
 <p><strong>Comment:</strong> After transformation and filtration of data, the residuals are distributed approximately normal as compared to the previous distribution, even though some points near the bottom still don’t fit well. The variance seems constant, and no more influential outliers are observed in this case.</p>
 </div>
