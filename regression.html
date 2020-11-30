@@ -443,14 +443,13 @@ div.tocify {
 <div id="outcome" class="section level3">
 <h3>Outcome</h3>
 <ul>
-<li>percent: Enrollment rate is calculated after grouping by year, age, city, race, noc and states variables; highest_degree and school_type are not grouped since both variables are directly correlated with the enrollment/attendance rate.</li>
+<li>percent (%): Enrollment rate is calculated after grouping by year, age, city, race, noc and states variables; highest_degree and school_type are not grouped since both variables are directly correlated with the enrollment/attendance rate.</li>
 </ul>
 </div>
 <div id="multiple-linear-regression" class="section level3">
 <h3>Multiple Linear Regression</h3>
 <p>The fitted model:</p>
 <p><span class="math display">\[ \hat{percent} = \beta_0 + \beta_1income + \beta_2race + \beta_3city + \beta_4noc + \varepsilon_i\]</span></p>
-<p>The dataframe used for the following analysis excludes data when percent(attendance rate) equals to 0 and 1. And the predictor NOC decreases to 6 levels.</p>
 <table>
 <thead>
 <tr class="header">
