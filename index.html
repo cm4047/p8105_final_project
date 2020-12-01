@@ -270,11 +270,17 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">college attendant rate project</a>
+      <a class="navbar-brand" href="index.html">Home</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        
+        <li>
+  <a href="final_report.html">
+    <span class="fa fa-newspaper fa-lg"></span>
+     
+    Project report
+  </a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -320,39 +326,56 @@ Equity in College Education Matters!</h1>
 
 
 <h3 style="text-align: center;">
-Exploring the college attendant rate in the United States
+Exploring the college attendance rate in the United States
 </h3>
 <h6 style="text-align: center;">
 By: Zhiye Lou (zl2978) | Chen Mo (cm4047) | Wenzhao Wu (ww2579) | Zhixin Yang (zy2440)
 </h6>
 <center>
-<p><img src="background.png" width="800" /></p>
+<p><img src="background.png" width="900" /></p>
 </center>
 <p><br></p>
 <div id="section" class="section level2 tabset tabset-pills">
 <h2></h2>
 <div id="introduction" class="section level3">
 <h3>Introduction</h3>
-<p>It is undoubtedly that there are numerous of people are living in extreme poverty, and this also happened to the United States. One noticeable situation is that people with college or higher degrees are tend to earn more than others. Besides, one of the major social issues in the United States is the inequality in the higher education, and thus the college attendance rate really matters for reducing poverty in the United States. So our team is trying to find the relevant factors which influence the college enrollment rate in the United States.</p>
+<p>It is undoubtedly that there are numerous of people are living in extreme poverty, and this also happened to the United States. One noticeable situation is that people with college or higher degrees are tend to earn more than others. Besides, one of the major social issues in the United States is the inequality in the higher education, and thus the college attendance rate really matters for reducing poverty in the United States. So our team is trying to find the relevant factors which influence the college attendance rate in the United States.</p>
 <p>In this project, with a dataset from IMPUS, we examined the factors influenced the college attendance rate. In particular, we are interested in:</p>
 <ul>
-<li>Any association between different income groups and the college enrollment rate?<br />
+<li>Any association between different income groups and the college attendance rate?<br />
 </li>
-<li>Any association between geography (states and if from an urban) and the college enrollment rate?</li>
-<li>Any association between races or genders and the college enrollment rate?<br />
+<li>Any association between geography (states and if from an urban) and the college attendance rate?</li>
+<li>Any association between races and the college attendance rate?<br />
 </li>
-<li>Any association between geography (states and if from an urban) and the college type?<br />
+<li>Any association between different income groups and the school type?<br />
 </li>
-<li>Any association between different income groups and the college type?<br />
-</li>
-<li>Any association between races or genders and the college type?<br />
-</li>
-<li>An national map which shows the details about the college enrollment rate and the college type</li>
+<li>What are the important variables if we do a multiple linear regression?</li>
+<li>How can we predict and visualize the college attendance rate among different groups?</li>
+<li>An national map which shows the details about the college attendance rate and the college type</li>
 </ul>
 </div>
 <div id="data" class="section level3">
 <h3>Data</h3>
-<p>The dataset we are using is IMPUS which provides census and survey data from around the world integrated across time and space. Since we were interested in the college attendance rate, we filtered the dataset to only include age between 18 to 24 years old. Besides, we only keep part of the original dataset because it is too big, and the final cleaned data has around 120,000 rows. We considered people who were currently enrolled in the college (including students who take a gap year from the university) or have graduated from the college before as the numerator of the college attendant rate.</p>
+<p>The dataset we are using is IMPUS which provides census and survey data from around the world integrated across time and space.</p>
+<p>Since we were interested in the college attendance rate, we filtered the dataset to only include age between 18 to 24 years old. Besides, we only keep part of the original dataset because it is too big, and the final cleaned data has around 120,000 rows.</p>
+<p>We considered people who were currently enrolled in the college (including students who take a gap year from the university) or have graduated from the college before as the numerator of the college attendance rate.</p>
+<p>Factors that we are interested in:</p>
+<ul>
+<li>year: Census year<br />
+</li>
+<li>age: Age</li>
+<li>states: States abbreviation<br />
+</li>
+<li>race: Race<br />
+</li>
+<li>number_of_children: Number of own children in the household<br />
+</li>
+<li>college_attendance_status: if one is enrolled in the college<br />
+</li>
+<li>school_type: Public or Private school<br />
+</li>
+<li>anually_family_income: Total anually family income</li>
+</ul>
 </div>
 </div>
 

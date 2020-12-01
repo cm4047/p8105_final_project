@@ -1,7 +1,11 @@
 name: "settings"
 output_dir: "."
 navbar:
-  title: "college attendant rate project"
+  title: "Home"
+  left:
+    - text: "Project report"
+      icon: fa-newspaper fa-lg
+      href: final_report.html
   right:
     - text: "Fantastic interactive plots"
       icon: fa-quidditch fa-lg
