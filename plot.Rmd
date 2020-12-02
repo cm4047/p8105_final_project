@@ -11,6 +11,8 @@ knitr::opts_chunk$set(
 	warning = FALSE
 )
 ```
+# College attendance rate over time
+The line chart shows the overall trend of college attendance rate of USA from 2008 to 2018. The college attendance rate was mainly increasing while it experienced two declines, one in 2009 and the other in 2016. In 2010, the overall college attendance rate saw its biggest growth.
 
 ```{r rate-year}
 library(tidyverse)
@@ -31,6 +33,9 @@ pyear = ggplot(rate_year, aes(x=year, y=rate)) +
         transition_reveal(year)
 animate(pyear, duration = 5, fps = 20, width = 400, height = 400, renderer = gifski_renderer())
 ```
+  
+# College attendance rate by Metropolitan
+The chart shows college attendance rate from 2008-2018, by metropolitan status. People in metropolitan and central city had the highest college attendance rate, while people not in metropolitan area had the lowest college attendance rate.
 
 
 ```{r byCity}
@@ -59,6 +64,10 @@ animate(pcity, duration = 5, fps = 20, width = 600, height = 400, renderer = gif
 #         add_trace(y=~`Not in metropolitan area`, name = "Not in metropolitan area", type = "scatter", mode = "line")
 
 ```
+  
+# College attendance rate by State
+The chart shows the changes of the ranking of different states across time. Generally, the top 5 states with the highest college attendance rate were DC, NJ, CT, MA and VT, all higher than 0.5.The top 5 states with the lowest college attendance rate were AK, OK, NV, LA and AZ, all lower than 0.38.
+
 
 
 ```{r byState}
@@ -109,6 +118,9 @@ animate(pstate,fps = 20,duration = 30, width = 950, height = 750, renderer = gif
 #         
 # pstate
 ```
+# College attendance rate by Income
+The chart shows college attendance rate from 2008-2018, by income. High income families have the highest college attendance rate until 2015, when low income families surpassed them. Families with middle income had lowest college attendance rate during the whole time period and was the main reason the overall college attendance rate dropped in 2016.
+
 
 ```{r byIncome}
 data_omitna <- na.omit(data_cleaned)
@@ -131,6 +143,8 @@ animate(pincome, duration = 5, fps = 20, width = 600, height = 400, renderer = g
 #         add_trace(y=~`low`, name = "low income", type = "scatter", mode = "line")
 
 ```
+# College attendance rate by Race
+The chart shows college attendance rate from 2008-2018, by race. Generally, Chinese had the highest college attendance rate, followed by other Asian or Pacific islanders and white people. American Indian of Alaska native had the lowest college attendance rate. The college attendance rate of Japanese increased rapidly before 2012 and had a dramatic drop in 2017.
 
 ```{r byRace}
 rate_race <- data_cleaned %>%
@@ -154,6 +168,9 @@ animate(prace, duration = 5, fps = 20, width = 600, height = 400, renderer = gif
 #         add_trace(y=~`Japanese`, name = "Japanese", type = "scatter", mode = "line") %>%
 #         add_trace(y=~`Others`, name = "others", type = "scatter", mode = "line")
 ```
+# College attendance rate by Number Of Children
+The chart shows college attendance rate from 2008-2018, by the number of children in the family. Generally, the more children in the family, the lower the college attendance rate.
+
 
 ```{r byNumberOfChildren}
  rate_noc <-  data_omitna%>%
@@ -180,6 +197,8 @@ animate(pnoc, duration = 5, fps = 20, width = 600, height = 400, renderer = gifs
         # animation_button(x = 1, xanchor = "right", y = 0, yanchor = "bottom")
 ```
 
+# College attendance rate by Type Of School
+The chart shows proportion of different type of school across people with different incomes from 2008 to 2018. High income people had relatively higher percentage of entering private school and relatively lower rate of non-enrollment among all people.
 
 ```{r bySchoolType}
 n_school <- data_omitna %>%
