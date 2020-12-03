@@ -48,7 +48,8 @@ The following resources are a sample of what inspired this project.
  * College enrollment rate. *USAFACTS*. [Link.](https://usafacts.org/data/topics/people-society/education/higher-education/college-enrollment-rate/)
 
 # Initial questions
-Our initial goal is to investigated the association between college attendance rate and different factors. To be more specifically, we are interested in the trend of college attendance rate among different groups and to see if there is discrimination. Our questions are as follows:
+Our initial goal is to investigated the association between college attendance rate and different factors. To be more specifically, we are interested in the trend of college attendance rate among different groups and to see if there is discrimination. Our questions are as follows:  
+
  * Any association between different income groups and the college attendance rate?  
  * Any association between geography (states and if from an urban) and the college attendance rate?
  * Any association between races and the college attendance rate?  
